@@ -9,7 +9,6 @@ contract CloakEscrow {
     address public paymentTokenAddress;
     address public platformAddress;
     IERC20 public paymentToken;
-    
 
     constructor(address _merchantAddress, address _paymentTokenAddress, address _platformAddress) {
         merchantAddress = _merchantAddress;
@@ -17,5 +16,4 @@ contract CloakEscrow {
         paymentTokenAddress = _paymentTokenAddress;
         paymentToken = IERC20(_paymentTokenAddress);
     }
-    
 }
