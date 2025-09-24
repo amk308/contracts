@@ -26,11 +26,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_DeployAndVerifyConfiguration() public {
         // Deploy escrow from factory
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
 
@@ -45,18 +41,10 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_MultipleEscrowsIndependentConfiguration() public {
         // Deploy escrow 1 for merchant 1 with USDC
-        address escrow1 = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrow1 = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Deploy escrow 2 for merchant 2 with DAI
-        address escrow2 = fixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(fixture.daiToken)
-        );
+        address escrow2 = fixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(fixture.daiToken));
 
         CloakEscrow escrowContract1 = CloakEscrow(escrow1);
         CloakEscrow escrowContract2 = CloakEscrow(escrow2);
@@ -64,7 +52,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
         // Verify independent configurations
         assertEq(escrowContract1.merchantAddress(), MERCHANT_1);
         assertEq(escrowContract1.paymentTokenAddress(), address(fixture.usdcToken));
-        
+
         assertEq(escrowContract2.merchantAddress(), MERCHANT_2);
         assertEq(escrowContract2.paymentTokenAddress(), address(fixture.daiToken));
 
@@ -76,11 +64,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_FundAndDistribute() public {
         // Deploy escrow
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
         uint256 fundAmount = getMediumTestAmount(); // 1000 USDC
@@ -113,19 +97,15 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_MultipleFundingAndDistribution() public {
         // Deploy escrow
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
 
         // Multiple funding rounds
         uint256[] memory fundAmounts = new uint256[](3);
-        fundAmounts[0] = 500 * 10**6;  // 500 USDC
-        fundAmounts[1] = 1000 * 10**6; // 1000 USDC
-        fundAmounts[2] = 750 * 10**6;  // 750 USDC
+        fundAmounts[0] = 500 * 10 ** 6; // 500 USDC
+        fundAmounts[1] = 1000 * 10 ** 6; // 1000 USDC
+        fundAmounts[2] = 750 * 10 ** 6; // 750 USDC
 
         uint256 totalMerchantReceived = 0;
         uint256 totalPlatformReceived = 0;
@@ -166,11 +146,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_EscrowOwnershipManagement() public {
         // Deploy escrow
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
 
@@ -193,11 +169,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_EscrowAddressManagement() public {
         // Deploy escrow
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
 
@@ -220,11 +192,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_EscrowPauseUnpause() public {
         // Deploy escrow
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
 
@@ -264,17 +232,9 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_CrossEscrowIndependence() public {
         // Deploy two escrows for different merchants
-        address escrow1 = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrow1 = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
-        address escrow2 = fixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(fixture.usdcToken)
-        );
+        address escrow2 = fixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(fixture.usdcToken));
 
         CloakEscrow escrowContract1 = CloakEscrow(escrow1);
         CloakEscrow escrowContract2 = CloakEscrow(escrow2);
@@ -311,11 +271,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_FactoryChangesDoNotAffectDeployedEscrows() public {
         // Deploy escrow with original factory settings
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
 
@@ -330,11 +286,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
         assertEq(escrow.platformAddress(), PLATFORM_ADDRESS);
 
         // Deploy new escrow after factory change
-        address newEscrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(fixture.usdcToken)
-        );
+        address newEscrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(fixture.usdcToken));
 
         CloakEscrow newEscrow = CloakEscrow(newEscrowAddress);
 
@@ -349,11 +301,7 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_EscrowErrorHandling() public {
         // Deploy escrow
-        address escrowAddress = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         CloakEscrow escrow = CloakEscrow(escrowAddress);
 
@@ -377,32 +325,28 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
     function test_Integration_LargeScaleDeploymentAndOperation() public {
         uint256 escrowCount = 10;
         address[] memory escrows = new address[](escrowCount);
-        
+
         // Deploy multiple escrows
         for (uint256 i = 0; i < escrowCount; i++) {
             bytes32 merchantId = generateRandomMerchantId(i);
-            escrows[i] = fixture.factory.deployEscrow(
-                merchantId,
-                MERCHANT_1,
-                address(fixture.usdcToken)
-            );
+            escrows[i] = fixture.factory.deployEscrow(merchantId, MERCHANT_1, address(fixture.usdcToken));
         }
 
         // Fund and operate all escrows
         for (uint256 i = 0; i < escrowCount; i++) {
             CloakEscrow escrow = CloakEscrow(escrows[i]);
-            
+
             // Fund escrow
             vm.prank(ADMIN);
             fixture.usdcToken.transfer(escrows[i], getSmallTestAmount());
-            
+
             // Verify configuration
             assertEq(escrow.merchantAddress(), MERCHANT_1);
             assertEq(escrow.paymentTokenAddress(), address(fixture.usdcToken));
-            
+
             // Distribute funds
             escrow.distribute();
-            
+
             // Verify empty after distribution
             assertEq(fixture.usdcToken.balanceOf(escrows[i]), 0);
         }
@@ -419,26 +363,18 @@ contract CloakEscrowFactoryIntegrationTest is Test, CloakEscrowFactoryFixtures {
 
     function test_Integration_DifferentTokenEscrows() public {
         // Deploy USDC escrow
-        address usdcEscrow = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address usdcEscrow = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Deploy DAI escrow for same merchant
-        address daiEscrow = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.daiToken)
-        );
+        address daiEscrow = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.daiToken));
 
         CloakEscrow usdcEscrowContract = CloakEscrow(usdcEscrow);
         CloakEscrow daiEscrowContract = CloakEscrow(daiEscrow);
 
         // Fund both escrows
         vm.startPrank(ADMIN);
-        fixture.usdcToken.transfer(usdcEscrow, 1000 * 10**6); // 1000 USDC
-        fixture.daiToken.transfer(daiEscrow, 1000 * 10**18);   // 1000 DAI
+        fixture.usdcToken.transfer(usdcEscrow, 1000 * 10 ** 6); // 1000 USDC
+        fixture.daiToken.transfer(daiEscrow, 1000 * 10 ** 18); // 1000 DAI
         vm.stopPrank();
 
         // Record initial balances

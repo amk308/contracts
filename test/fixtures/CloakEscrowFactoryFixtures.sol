@@ -76,16 +76,9 @@ contract CloakEscrowFactoryFixtures is Test {
         fixture.daiConfig = getDAIConfig();
 
         // Deploy mock tokens
-        fixture.usdcToken = new MockERC20(
-            fixture.usdcConfig.name,
-            fixture.usdcConfig.symbol,
-            fixture.usdcConfig.decimals
-        );
-        fixture.daiToken = new MockERC20(
-            fixture.daiConfig.name,
-            fixture.daiConfig.symbol,
-            fixture.daiConfig.decimals
-        );
+        fixture.usdcToken =
+            new MockERC20(fixture.usdcConfig.name, fixture.usdcConfig.symbol, fixture.usdcConfig.decimals);
+        fixture.daiToken = new MockERC20(fixture.daiConfig.name, fixture.daiConfig.symbol, fixture.daiConfig.decimals);
 
         // Deploy factory contract (test contract becomes owner)
         fixture.factory = new CloakEscrowFactory(PLATFORM_ADDRESS, DEFAULT_OWNER);
@@ -112,11 +105,7 @@ contract CloakEscrowFactoryFixtures is Test {
 
         // Deploy escrow
         vm.prank(FACTORY_OWNER);
-        address escrowAddress = fixture.factory.deployEscrow(
-            merchantId,
-            merchantAddress,
-            address(fixture.usdcToken)
-        );
+        address escrowAddress = fixture.factory.deployEscrow(merchantId, merchantAddress, address(fixture.usdcToken));
 
         result = DeploymentResult({
             escrowAddress: escrowAddress,
@@ -144,11 +133,7 @@ contract CloakEscrowFactoryFixtures is Test {
         // No prank needed - test contract is owner
 
         // Deploy first escrow for merchant 1 (USDC)
-        address escrow1 = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrow1 = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
         results[0] = DeploymentResult({
             escrowAddress: escrow1,
             merchantId: MERCHANT_ID_1,
@@ -158,11 +143,7 @@ contract CloakEscrowFactoryFixtures is Test {
         });
 
         // Deploy second escrow for merchant 1 (DAI)
-        address escrow2 = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.daiToken)
-        );
+        address escrow2 = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.daiToken));
         results[1] = DeploymentResult({
             escrowAddress: escrow2,
             merchantId: MERCHANT_ID_1,
@@ -172,11 +153,7 @@ contract CloakEscrowFactoryFixtures is Test {
         });
 
         // Deploy first escrow for merchant 2 (USDC)
-        address escrow3 = fixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(fixture.usdcToken)
-        );
+        address escrow3 = fixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(fixture.usdcToken));
         results[2] = DeploymentResult({
             escrowAddress: escrow3,
             merchantId: MERCHANT_ID_2,
@@ -186,11 +163,7 @@ contract CloakEscrowFactoryFixtures is Test {
         });
 
         // Deploy second escrow for merchant 2 (USDC)
-        address escrow4 = fixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(fixture.usdcToken)
-        );
+        address escrow4 = fixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(fixture.usdcToken));
         results[3] = DeploymentResult({
             escrowAddress: escrow4,
             merchantId: MERCHANT_ID_2,
@@ -303,11 +276,7 @@ contract CloakEscrowFactoryFixtures is Test {
      * @param escrowAddress The escrow address to fund
      * @param amount Amount to transfer
      */
-    function fundEscrowFromFixture(
-        FactoryFixture memory fixture,
-        address escrowAddress,
-        uint256 amount
-    ) public {
+    function fundEscrowFromFixture(FactoryFixture memory fixture, address escrowAddress, uint256 amount) public {
         vm.prank(ADMIN);
         fixture.usdcToken.transfer(escrowAddress, amount);
     }

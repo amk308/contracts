@@ -6,7 +6,6 @@ import {CloakEscrowFactory} from "../src/CloakEscrowFactory.sol";
 import {CloakEscrowFactoryFixtures} from "./fixtures/CloakEscrowFactoryFixtures.sol";
 
 contract CloakEscrowFactoryConstructorTest is Test, CloakEscrowFactoryFixtures {
-    
     function setUp() public {
         setupMockUsers();
     }
@@ -70,11 +69,11 @@ contract CloakEscrowFactoryConstructorTest is Test, CloakEscrowFactoryFixtures {
 
         for (uint256 i = 0; i < 10; i++) {
             bytes32 randomMerchantId = generateRandomMerchantId(i);
-            
+
             assertEq(factory.getMerchantEscrowCount(randomMerchantId), 0);
             assertEq(factory.getMerchantCounter(randomMerchantId), 0);
             assertFalse(factory.merchantExists(randomMerchantId));
-            
+
             address[] memory escrows = factory.getEscrowsForMerchant(randomMerchantId);
             assertEq(escrows.length, 0);
         }

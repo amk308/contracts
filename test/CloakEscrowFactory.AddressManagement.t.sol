@@ -20,7 +20,7 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
 
     function test_SetPlatformAddress_Success() public {
         address oldAddress = fixture.factory.platformAddress();
-        
+
         // No prank needed - test contract is owner
         vm.expectEmit(true, true, true, true);
         emit PlatformAddressUpdated(oldAddress, NEW_PLATFORM);
@@ -38,11 +38,11 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
         // No prank needed - test contract is owner
         for (uint256 i = 0; i < newAddresses.length; i++) {
             address oldAddress = fixture.factory.platformAddress();
-            
+
             vm.expectEmit(true, true, true, true);
             emit PlatformAddressUpdated(oldAddress, newAddresses[i]);
             fixture.factory.setPlatformAddress(newAddresses[i]);
-            
+
             assertEq(fixture.factory.platformAddress(), newAddresses[i]);
         }
         // No prank used
@@ -69,11 +69,7 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
     function test_SetPlatformAddress_AffectsNewDeployments() public {
         // Deploy escrow with original platform address
         // No prank needed - test contract is owner
-        address escrow1 = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrow1 = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Change platform address
         // No prank needed - test contract is owner
@@ -81,11 +77,7 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
 
         // Deploy escrow with new platform address
         // No prank needed - test contract is owner
-        address escrow2 = fixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(fixture.usdcToken)
-        );
+        address escrow2 = fixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(fixture.usdcToken));
 
         // Verify escrows have different platform addresses
         verifyEscrowConfiguration(escrow1, MERCHANT_1, address(fixture.usdcToken), PLATFORM_ADDRESS, DEFAULT_OWNER);
@@ -96,7 +88,7 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
 
     function test_SetDefaultOwner_Success() public {
         address oldOwner = fixture.factory.defaultOwner();
-        
+
         // No prank needed - test contract is owner
         vm.expectEmit(true, true, true, true);
         emit DefaultOwnerUpdated(oldOwner, NEW_DEFAULT_OWNER);
@@ -114,11 +106,11 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
         // No prank needed - test contract is owner
         for (uint256 i = 0; i < newOwners.length; i++) {
             address oldOwner = fixture.factory.defaultOwner();
-            
+
             vm.expectEmit(true, true, true, true);
             emit DefaultOwnerUpdated(oldOwner, newOwners[i]);
             fixture.factory.setDefaultOwner(newOwners[i]);
-            
+
             assertEq(fixture.factory.defaultOwner(), newOwners[i]);
         }
         // No prank used
@@ -145,11 +137,7 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
     function test_SetDefaultOwner_AffectsNewDeployments() public {
         // Deploy escrow with original default owner
         // No prank needed - test contract is owner
-        address escrow1 = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrow1 = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Change default owner
         // No prank needed - test contract is owner
@@ -157,11 +145,7 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
 
         // Deploy escrow with new default owner
         // No prank needed - test contract is owner
-        address escrow2 = fixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(fixture.usdcToken)
-        );
+        address escrow2 = fixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(fixture.usdcToken));
 
         // Verify escrows have different owners
         verifyEscrowConfiguration(escrow1, MERCHANT_1, address(fixture.usdcToken), PLATFORM_ADDRESS, DEFAULT_OWNER);
@@ -172,11 +156,11 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
 
     function test_SetBothAddresses_Success() public {
         // No prank needed - test contract is owner
-        
+
         // Change both addresses
         fixture.factory.setPlatformAddress(NEW_PLATFORM);
         fixture.factory.setDefaultOwner(NEW_DEFAULT_OWNER);
-        
+
         // No prank used
 
         // Verify both changes
@@ -186,18 +170,14 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
 
     function test_SetBothAddresses_AffectsNewDeployments() public {
         // No prank needed - test contract is owner
-        
+
         // Change both addresses
         fixture.factory.setPlatformAddress(NEW_PLATFORM);
         fixture.factory.setDefaultOwner(NEW_DEFAULT_OWNER);
-        
+
         // Deploy escrow with new addresses
-        address escrow = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
-        
+        address escrow = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
+
         // No prank used
 
         // Verify escrow uses new addresses
@@ -208,66 +188,42 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
 
     function test_PredictEscrowAddress_AfterPlatformChange() public {
         // Predict address with original platform
-        address predicted1 = fixture.factory.predictEscrowAddress(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address predicted1 = fixture.factory.predictEscrowAddress(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Change platform address
         // No prank needed - test contract is owner
         fixture.factory.setPlatformAddress(NEW_PLATFORM);
 
         // Predict address with new platform
-        address predicted2 = fixture.factory.predictEscrowAddress(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address predicted2 = fixture.factory.predictEscrowAddress(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Addresses should be different
         assertTrue(predicted1 != predicted2);
 
         // Deploy and verify prediction accuracy
         // No prank needed - test contract is owner
-        address deployed = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address deployed = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         assertEq(deployed, predicted2);
     }
 
     function test_PredictEscrowAddress_AfterDefaultOwnerChange() public {
         // Predict address with original owner
-        address predicted1 = fixture.factory.predictEscrowAddress(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address predicted1 = fixture.factory.predictEscrowAddress(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Change default owner
         // No prank needed - test contract is owner
         fixture.factory.setDefaultOwner(NEW_DEFAULT_OWNER);
 
         // Predict address with new owner
-        address predicted2 = fixture.factory.predictEscrowAddress(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address predicted2 = fixture.factory.predictEscrowAddress(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Addresses should be different
         assertTrue(predicted1 != predicted2);
 
         // Deploy and verify prediction accuracy
         // No prank needed - test contract is owner
-        address deployed = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address deployed = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         assertEq(deployed, predicted2);
     }
@@ -279,16 +235,16 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
         address currentOwner = fixture.factory.defaultOwner();
 
         // No prank needed - test contract is owner
-        
+
         // Setting same addresses should succeed
         vm.expectEmit(true, true, true, true);
         emit PlatformAddressUpdated(currentPlatform, currentPlatform);
         fixture.factory.setPlatformAddress(currentPlatform);
-        
+
         vm.expectEmit(true, true, true, true);
         emit DefaultOwnerUpdated(currentOwner, currentOwner);
         fixture.factory.setDefaultOwner(currentOwner);
-        
+
         // No prank used
 
         // Verify addresses unchanged
@@ -299,11 +255,7 @@ contract CloakEscrowFactoryAddressManagementTest is Test, CloakEscrowFactoryFixt
     function test_AddressManagement_DoesNotAffectExistingEscrows() public {
         // Deploy escrow with original addresses
         // No prank needed - test contract is owner
-        address escrow = fixture.factory.deployEscrow(
-            MERCHANT_ID_1,
-            MERCHANT_1,
-            address(fixture.usdcToken)
-        );
+        address escrow = fixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(fixture.usdcToken));
 
         // Change both addresses
         // No prank needed - test contract is owner

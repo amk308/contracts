@@ -32,18 +32,14 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
 
     function test_MerchantExists_AfterFirstDeployment() public {
         FactoryFixture memory newFixture = createFactoryFixture();
-        
+
         // Before deployment
         assertFalse(newFixture.factory.merchantExists(MERCHANT_ID_3));
-        
+
         // After deployment
         // No prank needed - test contract is owner
-        newFixture.factory.deployEscrow(
-            MERCHANT_ID_3,
-            MERCHANT_1,
-            address(newFixture.usdcToken)
-        );
-        
+        newFixture.factory.deployEscrow(MERCHANT_ID_3, MERCHANT_1, address(newFixture.usdcToken));
+
         assertTrue(newFixture.factory.merchantExists(MERCHANT_ID_3));
     }
 
@@ -75,11 +71,8 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
 
         // No prank needed - test contract is owner
         for (uint256 i = 0; i < 5; i++) {
-            deployedEscrows[i] = newFixture.factory.deployEscrow(
-                MERCHANT_ID_1,
-                MERCHANT_1,
-                address(newFixture.usdcToken)
-            );
+            deployedEscrows[i] =
+                newFixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(newFixture.usdcToken));
         }
         // No prank used
 
@@ -112,7 +105,7 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
 
     function test_GetMerchantForEscrow_RevertNonExistentEscrow() public {
         address fakeEscrow = address(0x999);
-        
+
         vm.expectRevert(CloakEscrowFactory.EscrowNotFound.selector);
         fixture.factory.getMerchantForEscrow(fakeEscrow);
     }
@@ -127,10 +120,10 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
     function test_GetMerchantCounter_AfterDeployments() public {
         // Merchant 1 deployed 2 escrows (counters 0, 1) -> next counter is 2
         assertEq(fixture.factory.getMerchantCounter(MERCHANT_ID_1), 2);
-        
+
         // Merchant 2 deployed 2 escrows (counters 0, 1) -> next counter is 2
         assertEq(fixture.factory.getMerchantCounter(MERCHANT_ID_2), 2);
-        
+
         // Merchant 3 never deployed -> counter is 0
         assertEq(fixture.factory.getMerchantCounter(MERCHANT_ID_3), 0);
     }
@@ -141,13 +134,9 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
         // No prank needed - test contract is owner
         for (uint256 i = 0; i < 10; i++) {
             assertEq(newFixture.factory.getMerchantCounter(MERCHANT_ID_1), i);
-            
-            newFixture.factory.deployEscrow(
-                MERCHANT_ID_1,
-                MERCHANT_1,
-                address(newFixture.usdcToken)
-            );
-            
+
+            newFixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(newFixture.usdcToken));
+
             assertEq(newFixture.factory.getMerchantCounter(MERCHANT_ID_1), i + 1);
         }
         // No prank used
@@ -177,23 +166,15 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
         FactoryFixture memory newFixture = createFactoryFixture();
 
         // No prank needed - test contract is owner
-        
+
         // Deploy 3 escrows for merchant 1
         for (uint256 i = 0; i < 3; i++) {
-            newFixture.factory.deployEscrow(
-                MERCHANT_ID_1,
-                MERCHANT_1,
-                address(newFixture.usdcToken)
-            );
+            newFixture.factory.deployEscrow(MERCHANT_ID_1, MERCHANT_1, address(newFixture.usdcToken));
         }
-        
+
         // Deploy 1 escrow for merchant 2
-        newFixture.factory.deployEscrow(
-            MERCHANT_ID_2,
-            MERCHANT_2,
-            address(newFixture.usdcToken)
-        );
-        
+        newFixture.factory.deployEscrow(MERCHANT_ID_2, MERCHANT_2, address(newFixture.usdcToken));
+
         // No prank used
 
         // Verify independent counters
@@ -220,13 +201,9 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
     function test_MerchantManagement_ZeroMerchantId() public {
         // Zero merchant ID should be treated as valid (though not recommended)
         FactoryFixture memory newFixture = createFactoryFixture();
-        
+
         // No prank needed - test contract is owner
-        address escrow = newFixture.factory.deployEscrow(
-            bytes32(0),
-            MERCHANT_1,
-            address(newFixture.usdcToken)
-        );
+        address escrow = newFixture.factory.deployEscrow(bytes32(0), MERCHANT_1, address(newFixture.usdcToken));
 
         assertTrue(newFixture.factory.merchantExists(bytes32(0)));
         assertEq(newFixture.factory.getMerchantForEscrow(escrow), bytes32(0));
@@ -235,13 +212,9 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
     function test_MerchantManagement_MaxBytes32MerchantId() public {
         bytes32 maxMerchantId = bytes32(type(uint256).max);
         FactoryFixture memory newFixture = createFactoryFixture();
-        
+
         // No prank needed - test contract is owner
-        address escrow = newFixture.factory.deployEscrow(
-            maxMerchantId,
-            MERCHANT_1,
-            address(newFixture.usdcToken)
-        );
+        address escrow = newFixture.factory.deployEscrow(maxMerchantId, MERCHANT_1, address(newFixture.usdcToken));
 
         assertTrue(newFixture.factory.merchantExists(maxMerchantId));
         assertEq(newFixture.factory.getMerchantForEscrow(escrow), maxMerchantId);
@@ -256,12 +229,8 @@ contract CloakEscrowFactoryMerchantManagementTest is Test, CloakEscrowFactoryFix
         // No prank needed - test contract is owner
         for (uint256 i = 0; i < merchantCount; i++) {
             bytes32 merchantId = generateRandomMerchantId(i);
-            newFixture.factory.deployEscrow(
-                merchantId,
-                MERCHANT_1,
-                address(newFixture.usdcToken)
-            );
-            
+            newFixture.factory.deployEscrow(merchantId, MERCHANT_1, address(newFixture.usdcToken));
+
             assertTrue(newFixture.factory.merchantExists(merchantId));
             assertEq(newFixture.factory.getMerchantEscrowCount(merchantId), 1);
         }
