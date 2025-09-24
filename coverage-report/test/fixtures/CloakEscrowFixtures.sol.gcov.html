@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.info - test/fixtures/CloakEscrowFixtures.sol</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory test/fixtures">test/fixtures</a> - CloakEscrowFixtures.sol<span style="font-size: 80%;"> (source / <a href="CloakEscrowFixtures.sol.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryMed">84.8&nbsp;%</td>
+            <td class="headerCovTableEntry">33</td>
+            <td class="headerCovTableEntry">28</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2025-09-24 23:20:53</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // SPDX-License-Identifier: MIT</span>
+<span id="L2"><span class="lineNum">       2</span>              : pragma solidity ^0.8.13;</span>
+<span id="L3"><span class="lineNum">       3</span>              : </span>
+<span id="L4"><span class="lineNum">       4</span>              : import {Test} from &quot;forge-std/Test.sol&quot;;</span>
+<span id="L5"><span class="lineNum">       5</span>              : import {CloakEscrow} from &quot;../../src/CloakEscrow.sol&quot;;</span>
+<span id="L6"><span class="lineNum">       6</span>              : import {MockERC20} from &quot;../utils/MockERC20.sol&quot;;</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : /**</span>
+<span id="L9"><span class="lineNum">       9</span>              :  * @title CloakEscrowFixtures</span>
+<span id="L10"><span class="lineNum">      10</span>              :  * @dev Provides standardized test fixtures and setup utilities for CloakEscrow tests</span>
+<span id="L11"><span class="lineNum">      11</span>              :  */</span>
+<span id="L12"><span class="lineNum">      12</span>              : contract CloakEscrowFixtures is Test {</span>
+<span id="L13"><span class="lineNum">      13</span>              :     // Standard test addresses</span>
+<span id="L14"><span class="lineNum">      14</span>              :     address public constant OWNER = address(0x1);</span>
+<span id="L15"><span class="lineNum">      15</span>              :     address public constant MERCHANT = address(0x2);</span>
+<span id="L16"><span class="lineNum">      16</span>              :     address public constant PLATFORM = address(0x3);</span>
+<span id="L17"><span class="lineNum">      17</span>              :     address public constant NEW_MERCHANT = address(0x4);</span>
+<span id="L18"><span class="lineNum">      18</span>              :     address public constant NEW_PLATFORM = address(0x5);</span>
+<span id="L19"><span class="lineNum">      19</span>              :     address public constant USER = address(0x6);</span>
+<span id="L20"><span class="lineNum">      20</span>              :     address public constant ADMIN = address(0x7);</span>
+<span id="L21"><span class="lineNum">      21</span>              : </span>
+<span id="L22"><span class="lineNum">      22</span>              :     // Token configurations</span>
+<span id="L23"><span class="lineNum">      23</span>              :     struct TokenConfig {</span>
+<span id="L24"><span class="lineNum">      24</span>              :         string name;</span>
+<span id="L25"><span class="lineNum">      25</span>              :         string symbol;</span>
+<span id="L26"><span class="lineNum">      26</span>              :         uint8 decimals;</span>
+<span id="L27"><span class="lineNum">      27</span>              :         uint256 mintAmount;</span>
+<span id="L28"><span class="lineNum">      28</span>              :     }</span>
+<span id="L29"><span class="lineNum">      29</span>              : </span>
+<span id="L30"><span class="lineNum">      30</span>              :     // Standard token configurations for testing</span>
+<span id="L31"><span class="lineNum">      31</span>              :     function getUSDCConfig() public pure returns (TokenConfig memory) {</span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          83 :         return TokenConfig(&quot;Mock USDC&quot;, &quot;USDC&quot;, 6, 10000 * 10 ** 6);</span></span>
+<span id="L33"><span class="lineNum">      33</span>              :     }</span>
+<span id="L34"><span class="lineNum">      34</span>              : </span>
+<span id="L35"><span class="lineNum">      35</span>              :     function getDAIConfig() public pure returns (TokenConfig memory) {</span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          23 :         return TokenConfig(&quot;Mock DAI&quot;, &quot;DAI&quot;, 18, 10000 * 10 ** 18);</span></span>
+<span id="L37"><span class="lineNum">      37</span>              :     }</span>
+<span id="L38"><span class="lineNum">      38</span>              : </span>
+<span id="L39"><span class="lineNum">      39</span>              :     function getWBTCConfig() public pure returns (TokenConfig memory) {</span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          23 :         return TokenConfig(&quot;Mock WBTC&quot;, &quot;WBTC&quot;, 8, 10 * 10 ** 8);</span></span>
+<span id="L41"><span class="lineNum">      41</span>              :     }</span>
+<span id="L42"><span class="lineNum">      42</span>              : </span>
+<span id="L43"><span class="lineNum">      43</span>              :     // Test fixture data</span>
+<span id="L44"><span class="lineNum">      44</span>              :     struct EscrowFixture {</span>
+<span id="L45"><span class="lineNum">      45</span>              :         CloakEscrow escrow;</span>
+<span id="L46"><span class="lineNum">      46</span>              :         MockERC20 token;</span>
+<span id="L47"><span class="lineNum">      47</span>              :         TokenConfig config;</span>
+<span id="L48"><span class="lineNum">      48</span>              :     }</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              :     /**</span>
+<span id="L51"><span class="lineNum">      51</span>              :      * @dev Creates a complete escrow fixture with token and escrow contract</span>
+<span id="L52"><span class="lineNum">      52</span>              :      * @param config Token configuration to use</span>
+<span id="L53"><span class="lineNum">      53</span>              :      * @return fixture Complete fixture with escrow and token</span>
+<span id="L54"><span class="lineNum">      54</span>              :      */</span>
+<span id="L55"><span class="lineNum">      55</span>              :     function createEscrowFixture(TokenConfig memory config) public returns (EscrowFixture memory fixture) {</span>
+<span id="L56"><span class="lineNum">      56</span>              :         // Deploy mock token</span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         129 :         fixture.token = new MockERC20(config.name, config.symbol, config.decimals);</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         129 :         fixture.config = config;</span></span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span>              :         // Deploy escrow contract</span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         129 :         fixture.escrow = new CloakEscrow(MERCHANT, address(fixture.token), PLATFORM, OWNER);</span></span>
+<span id="L62"><span class="lineNum">      62</span>              : </span>
+<span id="L63"><span class="lineNum">      63</span>              :         // Mint tokens to admin for distribution in tests</span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">         129 :         fixture.token.mint(ADMIN, config.mintAmount);</span></span>
+<span id="L65"><span class="lineNum">      65</span>              : </span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaUNC">           0 :         return fixture;</span></span>
+<span id="L67"><span class="lineNum">      67</span>              :     }</span>
+<span id="L68"><span class="lineNum">      68</span>              : </span>
+<span id="L69"><span class="lineNum">      69</span>              :     /**</span>
+<span id="L70"><span class="lineNum">      70</span>              :      * @dev Creates multiple escrow fixtures for different token types</span>
+<span id="L71"><span class="lineNum">      71</span>              :      * @return usdcFixture USDC (6 decimals) fixture</span>
+<span id="L72"><span class="lineNum">      72</span>              :      * @return daiFixture DAI (18 decimals) fixture</span>
+<span id="L73"><span class="lineNum">      73</span>              :      * @return wbtcFixture WBTC (8 decimals) fixture</span>
+<span id="L74"><span class="lineNum">      74</span>              :      */</span>
+<span id="L75"><span class="lineNum">      75</span>              :     function createMultiTokenFixtures()</span>
+<span id="L76"><span class="lineNum">      76</span>              :         public</span>
+<span id="L77"><span class="lineNum">      77</span>              :         returns (EscrowFixture memory usdcFixture, EscrowFixture memory daiFixture, EscrowFixture memory wbtcFixture)</span>
+<span id="L78"><span class="lineNum">      78</span>              :     {</span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          23 :         usdcFixture = createEscrowFixture(getUSDCConfig());</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          23 :         daiFixture = createEscrowFixture(getDAIConfig());</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          23 :         wbtcFixture = createEscrowFixture(getWBTCConfig());</span></span>
+<span id="L82"><span class="lineNum">      82</span>              : </span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaUNC">           0 :         return (usdcFixture, daiFixture, wbtcFixture);</span></span>
+<span id="L84"><span class="lineNum">      84</span>              :     }</span>
+<span id="L85"><span class="lineNum">      85</span>              : </span>
+<span id="L86"><span class="lineNum">      86</span>              :     /**</span>
+<span id="L87"><span class="lineNum">      87</span>              :      * @dev Creates a simple escrow fixture with USDC (most common case)</span>
+<span id="L88"><span class="lineNum">      88</span>              :      * @return fixture USDC escrow fixture</span>
+<span id="L89"><span class="lineNum">      89</span>              :      */</span>
+<span id="L90"><span class="lineNum">      90</span>              :     function createSimpleFixture() public returns (EscrowFixture memory fixture) {</span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          60 :         return createEscrowFixture(getUSDCConfig());</span></span>
+<span id="L92"><span class="lineNum">      92</span>              :     }</span>
+<span id="L93"><span class="lineNum">      93</span>              : </span>
+<span id="L94"><span class="lineNum">      94</span>              :     /**</span>
+<span id="L95"><span class="lineNum">      95</span>              :      * @dev Creates a custom token configuration</span>
+<span id="L96"><span class="lineNum">      96</span>              :      * @param name Token name</span>
+<span id="L97"><span class="lineNum">      97</span>              :      * @param symbol Token symbol</span>
+<span id="L98"><span class="lineNum">      98</span>              :      * @param decimals Token decimals</span>
+<span id="L99"><span class="lineNum">      99</span>              :      * @param mintAmount Amount to mint to admin</span>
+<span id="L100"><span class="lineNum">     100</span>              :      * @return config Custom token configuration</span>
+<span id="L101"><span class="lineNum">     101</span>              :      */</span>
+<span id="L102"><span class="lineNum">     102</span>              :     function createCustomTokenConfig(string memory name, string memory symbol, uint8 decimals, uint256 mintAmount)</span>
+<span id="L103"><span class="lineNum">     103</span>              :         public</span>
+<span id="L104"><span class="lineNum">     104</span>              :         pure</span>
+<span id="L105"><span class="lineNum">     105</span>              :         returns (TokenConfig memory config)</span>
+<span id="L106"><span class="lineNum">     106</span>              :     {</span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaUNC">           0 :         return TokenConfig(name, symbol, decimals, mintAmount);</span></span>
+<span id="L108"><span class="lineNum">     108</span>              :     }</span>
+<span id="L109"><span class="lineNum">     109</span>              : </span>
+<span id="L110"><span class="lineNum">     110</span>              :     /**</span>
+<span id="L111"><span class="lineNum">     111</span>              :      * @dev Funds an escrow contract with tokens from admin</span>
+<span id="L112"><span class="lineNum">     112</span>              :      * @param fixture The escrow fixture to fund</span>
+<span id="L113"><span class="lineNum">     113</span>              :      * @param amount Amount of tokens to transfer</span>
+<span id="L114"><span class="lineNum">     114</span>              :      */</span>
+<span id="L115"><span class="lineNum">     115</span>              :     function fundEscrow(EscrowFixture memory fixture, uint256 amount) public {</span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">          25 :         vm.prank(ADMIN);</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          25 :         fixture.token.transfer(address(fixture.escrow), amount);</span></span>
+<span id="L118"><span class="lineNum">     118</span>              :     }</span>
+<span id="L119"><span class="lineNum">     119</span>              : </span>
+<span id="L120"><span class="lineNum">     120</span>              :     /**</span>
+<span id="L121"><span class="lineNum">     121</span>              :      * @dev Gets standard test amounts for different token decimals</span>
+<span id="L122"><span class="lineNum">     122</span>              :      * @param decimals Token decimals</span>
+<span id="L123"><span class="lineNum">     123</span>              :      * @return testAmount Standard test amount for the given decimals</span>
+<span id="L124"><span class="lineNum">     124</span>              :      */</span>
+<span id="L125"><span class="lineNum">     125</span>              :     function getStandardTestAmount(uint8 decimals) public pure returns (uint256 testAmount) {</span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">          12 :         if (decimals == 6) {</span></span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">           9 :             return 1000 * 10 ** 6; // 1000 USDC</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">           3 :         } else if (decimals == 18) {</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">           2 :             return 1000 * 10 ** 18; // 1000 DAI</span></span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">           1 :         } else if (decimals == 8) {</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">           1 :             return 1 * 10 ** 8; // 1 WBTC</span></span>
+<span id="L132"><span class="lineNum">     132</span>              :         } else {</span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaUNC">           0 :             return 1000 * 10 ** decimals; // Default: 1000 tokens</span></span>
+<span id="L134"><span class="lineNum">     134</span>              :         }</span>
+<span id="L135"><span class="lineNum">     135</span>              :     }</span>
+<span id="L136"><span class="lineNum">     136</span>              : </span>
+<span id="L137"><span class="lineNum">     137</span>              :     /**</span>
+<span id="L138"><span class="lineNum">     138</span>              :      * @dev Calculates expected platform and merchant amounts</span>
+<span id="L139"><span class="lineNum">     139</span>              :      * @param totalAmount Total amount to distribute</span>
+<span id="L140"><span class="lineNum">     140</span>              :      * @param feeBasisPoints Platform fee in basis points</span>
+<span id="L141"><span class="lineNum">     141</span>              :      * @return platformAmount Expected platform amount</span>
+<span id="L142"><span class="lineNum">     142</span>              :      * @return merchantAmount Expected merchant amount</span>
+<span id="L143"><span class="lineNum">     143</span>              :      */</span>
+<span id="L144"><span class="lineNum">     144</span>              :     function calculateDistribution(uint256 totalAmount, uint256 feeBasisPoints)</span>
+<span id="L145"><span class="lineNum">     145</span>              :         public</span>
+<span id="L146"><span class="lineNum">     146</span>              :         pure</span>
+<span id="L147"><span class="lineNum">     147</span>              :         returns (uint256 platformAmount, uint256 merchantAmount)</span>
+<span id="L148"><span class="lineNum">     148</span>              :     {</span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">         525 :         platformAmount = (totalAmount * feeBasisPoints) / 10000;</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">         525 :         merchantAmount = totalAmount - platformAmount;</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaUNC">           0 :         return (platformAmount, merchantAmount);</span></span>
+<span id="L152"><span class="lineNum">     152</span>              :     }</span>
+<span id="L153"><span class="lineNum">     153</span>              : </span>
+<span id="L154"><span class="lineNum">     154</span>              :     /**</span>
+<span id="L155"><span class="lineNum">     155</span>              :      * @dev Sets up mock users with labeled addresses for better test readability</span>
+<span id="L156"><span class="lineNum">     156</span>              :      */</span>
+<span id="L157"><span class="lineNum">     157</span>              :     function setupMockUsers() public {</span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">          78 :         vm.label(OWNER, &quot;Owner&quot;);</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">          78 :         vm.label(MERCHANT, &quot;Merchant&quot;);</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">          78 :         vm.label(PLATFORM, &quot;Platform&quot;);</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">          78 :         vm.label(NEW_MERCHANT, &quot;NewMerchant&quot;);</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          78 :         vm.label(NEW_PLATFORM, &quot;NewPlatform&quot;);</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">          78 :         vm.label(USER, &quot;User&quot;);</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          78 :         vm.label(ADMIN, &quot;Admin&quot;);</span></span>
+<span id="L165"><span class="lineNum">     165</span>              :     }</span>
+<span id="L166"><span class="lineNum">     166</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.3.2-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
